@@ -22,6 +22,9 @@ public class Userservice {
     public void saveentry(User userentry){
         userrepo.save(userentry);
     }
+    public void saveUser(User user) {
+        userrepo.save(user);
+    }
 
     public List<User> getall() {
         return userrepo.findAll();

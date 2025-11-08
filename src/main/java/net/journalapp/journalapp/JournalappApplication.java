@@ -17,10 +17,10 @@ public class JournalappApplication {
 	}
 
 
-	@Bean
-	public PlatformTransactionManager transactionManager(MongoDatabaseFactory dbFactory) {
-		return new MongoTransactionManager(dbFactory);
-	}
+    @Bean
+    public PlatformTransactionManager transactionManager(MongoDatabaseFactory dbFactory) {
+        return new MongoTransactionManager(dbFactory);
+    }
 }
 
 

@@ -5,11 +5,12 @@ import net.journalapp.journalapp.entity.User;
 import net.journalapp.journalapp.service.Userservice;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import net.journalapp.journalapp.entity.journalentry;
 import net.journalapp.journalapp.service.journalentryservice;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -35,11 +36,14 @@ public class journalentrycontrollerv2 {
     };
 
     @PostMapping("{username}")
-    public journalentry createentry(@RequestBody journalentry myentry,@PathVariable String username){
-        //myentry is an instance of the journalentry class
-        myentry.setDate(LocalDateTime.now());
-        journalentryservice.saveentry(myentry,username);
-        return myentry;
+    public ResponseEntity<journalentry> createentry(@RequestBody journalentry myentry, @PathVariable String username){
+       try {
+           journalentryservice.saveEntry(myentry,username);
+           return new ResponseEntity<>(myentry, HttpStatus.CREATED);
+       }
+       catch (Exception e){
+           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+       }
     }
 
 
@@ -64,7 +68,7 @@ public class journalentrycontrollerv2 {
             journalentryservice.saveentry(old);
 
         }
-       // journalentryservice.saveentry(old);
+        journalentryservice.saveentry(old);
 
         return null;
     }

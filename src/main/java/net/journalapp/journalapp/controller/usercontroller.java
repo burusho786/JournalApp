@@ -5,6 +5,7 @@ import net.journalapp.journalapp.entity.User;
 import net.journalapp.journalapp.service.Userservice;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,10 +28,12 @@ public void createuser(@RequestBody User username){
     userservice.saveentry(username);
 }
 
-@GetMapping("/name/name")
-    public void getusername(@PathVariable ObjectId id){
-    userservice.findbyid(id);
-}
+    @GetMapping("/name/{username}")
+    public ResponseEntity<User> getUserByName(@PathVariable String username) {
+        User user = userservice.findByusername(username);
+        return ResponseEntity.ok(user);
+    }
+
 
 @PutMapping("/{username}")
     public User updateuser(@RequestBody User user,@PathVariable String username){

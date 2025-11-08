@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,19 +24,24 @@ public class journalentryservice {
   @Autowired
   private Userservice userservice;
 
-  @Transactional //atomoicity and isolation
-    public void saveentry(journalentry journalentry,String username){
-        User user = userservice.findByusername(username);//user name is saved
-        journalentry saved = journalrepo.save(journalentry);
-        user.getJournalentries().add(saved);
-       //user.setUsername(null);
-      // since we have set the user name to null but in ouver username us set to be unique so we will use the transactional anotation for atomicity
-      userservice.saveentry(user);
+    @Transactional
+    public void saveEntry(journalentry journalEntry, String userName) {
+        try {
+            User user = userservice.findByusername(userName);
+            journalEntry.setDate(LocalDateTime.now());
+            journalentry saved = journalrepo.save(journalEntry);
+            user.getJournalentries().add(saved);
+            userservice.saveUser(user);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while saving the entry.", e);
+        }
     }
-    public void saveentry(journalentry journalentry){
+
+   public void saveentry(journalentry journalentry){
         journalrepo.save(journalentry);
 
     }
+
 
     public List<journalentry> getall() {
         return journalrepo.findAll();
